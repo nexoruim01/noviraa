@@ -1,1 +1,0 @@
-if('serviceWorker' in navigator){navigator.serviceWorker.register('/noviraa/service-worker.js').catch(function(e){console.log('SW:',e);});}
