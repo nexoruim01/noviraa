@@ -1,0 +1,233 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Prepare www
+        run: |
+          mkdir -p www
+          cp index.html www/
+
+      - name: Install Capacitor
+        run: |
+          if [ ! -f package.json ]; then npm init -y; fi
+          npm install --no-fund --no-audit @capacitor/core @capacitor/cli @capacitor/android @capacitor/push-notifications @capacitor/local-notifications
+
+      - name: Init Capacitor
+        run: |
+          if [ ! -f capacitor.config.json ]; then
+            npx cap init Novira com.novira.app --web-dir=www
+          fi
+
+      - name: Add Android
+        run: |
+          if [ ! -d android ]; then
+            npx cap add android
+          fi
+
+      - name: Copy google-services.json
+        run: |
+          cp google-services.json android/app/google-services.json
+          echo "=== google-services.json ==="
+          head -5 android/app/google-services.json
+
+      - name: Create AudioRoutePlugin
+        run: |
+          mkdir -p android/app/src/main/java/com/novira/app
+          cat > android/app/src/main/java/com/novira/app/AudioRoutePlugin.java << 'JAVAEOF'
+          package com.novira.app;
+          import android.content.Context;
+          import android.media.AudioManager;
+          import com.getcapacitor.JSObject;
+          import com.getcapacitor.Plugin;
+          import com.getcapacitor.PluginCall;
+          import com.getcapacitor.PluginMethod;
+          import com.getcapacitor.annotation.CapacitorPlugin;
+          @CapacitorPlugin(name = "AudioRoute")
+          public class AudioRoutePlugin extends Plugin {
+              private AudioManager audioManager;
+              @Override
+              public void load() {
+                  audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+              }
+              @PluginMethod
+              public void setEarpiece(PluginCall call) {
+                  try {
+                      audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+                      audioManager.setSpeakerphoneOn(false);
+                      JSObject ret = new JSObject();
+                      ret.put("route", "earpiece");
+                      call.resolve(ret);
+                  } catch (Exception e) { call.reject("fail: " + e.getMessage()); }
+              }
+              @PluginMethod
+              public void setSpeaker(PluginCall call) {
+                  try {
+                      audioManager.setMode(AudioManager.MODE_NORMAL);
+                      audioManager.setSpeakerphoneOn(true);
+                      JSObject ret = new JSObject();
+                      ret.put("route", "speaker");
+                      call.resolve(ret);
+                  } catch (Exception e) { call.reject("fail: " + e.getMessage()); }
+              }
+              @PluginMethod
+              public void resetMode(PluginCall call) {
+                  try {
+                      audioManager.setMode(AudioManager.MODE_NORMAL);
+                      audioManager.setSpeakerphoneOn(false);
+                      call.resolve();
+                  } catch (Exception e) { call.reject("fail: " + e.getMessage()); }
+              }
+          }
+          JAVAEOF
+
+      - name: Create MainActivity
+        run: |
+          cat > android/app/src/main/java/com/novira/app/MainActivity.java << 'JAVAEOF'
+          package com.novira.app;
+          import android.Manifest;
+          import android.content.pm.PackageManager;
+          import android.os.Bundle;
+          import android.webkit.PermissionRequest;
+          import android.webkit.WebChromeClient;
+          import android.webkit.WebView;
+          import androidx.core.app.ActivityCompat;
+          import androidx.core.content.ContextCompat;
+          import com.getcapacitor.Bridge;
+          import com.getcapacitor.BridgeActivity;
+          public class MainActivity extends BridgeActivity {
+              private static final int PERM_REQUEST_CODE = 1001;
+              @Override
+              public void onCreate(Bundle savedInstanceState) {
+                  registerPlugin(AudioRoutePlugin.class);
+                  super.onCreate(savedInstanceState);
+                  Bridge bridge = getBridge();
+                  if (bridge != null) {
+                      WebView webView = bridge.getWebView();
+                      if (webView != null) {
+                          webView.setWebChromeClient(new WebChromeClient() {
+                              @Override
+                              public void onPermissionRequest(final PermissionRequest request) {
+                                  runOnUiThread(new Runnable() {
+                                      @Override
+                                      public void run() {
+                                          try { request.grant(request.getResources()); }
+                                          catch (Exception e) { request.deny(); }
+                                      }
+                                  });
+                              }
+                          });
+                      }
+                  }
+                  requestRuntimePermissions();
+              }
+              private void requestRuntimePermissions() {
+                  String[] perms = new String[]{
+                      Manifest.permission.RECORD_AUDIO,
+                      Manifest.permission.CAMERA,
+                      Manifest.permission.MODIFY_AUDIO_SETTINGS,
+                      Manifest.permission.POST_NOTIFICATIONS
+                  };
+                  boolean need = false;
+                  for (String p : perms) {
+                      if (ContextCompat.checkSelfPermission(this, p) != PackageManager.PERMISSION_GRANTED) {
+                          need = true;
+                          break;
+                      }
+                  }
+                  if (need) {
+                      ActivityCompat.requestPermissions(this, perms, PERM_REQUEST_CODE);
+                  }
+              }
+          }
+          JAVAEOF
+
+      - name: Add permissions
+        run: |
+          MANIFEST=android/app/src/main/AndroidManifest.xml
+          if ! grep -q "RECORD_AUDIO" $MANIFEST; then
+            sed -i '/<application/i \    <uses-permission android:name="android.permission.RECORD_AUDIO" />\n    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />\n    <uses-permission android:name="android.permission.CAMERA" />\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <uses-permission android:name="android.permission.WAKE_LOCK" />' $MANIFEST
+          fi
+          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+
+      - name: Fix Kotlin duplicate class issue
+        run: |
+          ROOT_GRADLE=android/build.gradle
+          cat > /tmp/root_fix.txt << 'KOTLINEOF'
+
+          allprojects {
+              configurations.all {
+                  resolutionStrategy {
+                      force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
+                      force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22'
+                      force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
+                  }
+              }
+          }
+          KOTLINEOF
+          cat $ROOT_GRADLE >> /tmp/root_fix.txt
+          mv /tmp/root_fix.txt $ROOT_GRADLE
+
+          if ! grep -q "google-services" $ROOT_GRADLE; then
+            sed -i "s|dependencies {|dependencies {\n        classpath 'com.google.gms:google-services:4.4.0'|" $ROOT_GRADLE
+          fi
+
+      - name: Apply Google Services plugin
+        run: |
+          APP_GRADLE=android/app/build.gradle
+          if ! grep -q "com.google.gms.google-services" $APP_GRADLE; then
+            echo "" >> $APP_GRADLE
+            echo "apply plugin: 'com.google.gms.google-services'" >> $APP_GRADLE
+          fi
+          if ! grep -q "androidx.core:core" $APP_GRADLE; then
+            cat >> $APP_GRADLE << 'GRADLEEOF'
+
+          dependencies {
+              implementation 'androidx.core:core:1.12.0'
+              implementation 'androidx.appcompat:appcompat:1.6.1'
+          }
+          GRADLEEOF
+          fi
+
+      - name: Sync Capacitor
+        run: npx cap sync
+
+      - name: Build APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Find APK
+        if: always()
+        run: |
+          find android -name "*.apk" -type f 2>/dev/null
+          ls -la android/app/build/outputs/apk/debug/ 2>/dev/null || echo "no apk"
+
+      - name: Upload APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: novira-apk
+          path: android/app/build/outputs/apk/debug/*.apk
+          retention-days: 30
