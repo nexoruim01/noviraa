@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "277740772327",
+    "project_id": "novira-e29a5",
+    "storage_bucket": "novira-e29a5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:277740772327:android:46ced46a5af33dc8e33b42",
+        "android_client_info": {
+          "package_name": "app.novira.chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_JsKLZikJ34RSOziPfumWCiT4B6tCeWs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
