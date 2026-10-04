@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Novira Sounds</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:'Segoe UI',Tahoma,sans-serif;background:linear-gradient(135deg,#0A0E1A,#1A1230);color:#F1F4FA;min-height:100vh;padding:30px 20px;display:flex;flex-direction:column;align-items:center}
+  h1{font-size:28px;font-weight:900;background:linear-gradient(135deg,#FF6B9D,#A855F7,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;text-align:center}
+  .sub{color:#8B94AD;font-size:13px;margin-bottom:30px;text-align:center;line-height:1.6;max-width:500px}
+  .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:20px;margin-bottom:14px;width:100%;max-width:520px;display:flex;align-items:center;gap:14px}
+  .icon{width:54px;height:54px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+  .icon.c1{background:linear-gradient(135deg,#A855F7,#7C3AED)}
+  .icon.c2{background:linear-gradient(135deg,#FBBF24,#F59E0B)}
+  .icon.c3{background:linear-gradient(135deg,#22C55E,#06B6D4)}
+  .info{flex:1;min-width:0}
+  .name{font-size:15px;font-weight:800;margin-bottom:3px}
+  .desc{font-size:11.5px;color:#8B94AD}
+  .btns{display:flex;gap:8px;flex-shrink:0}
+  .btn{padding:10px 14px;border-radius:14px;border:none;font-family:inherit;font-size:12.5px;font-weight:800;cursor:pointer}
+  .btn:active{transform:scale(.95)}
+  .btn.play{background:rgba(168,85,247,.18);color:#C4B5FD;border:1px solid rgba(168,85,247,.35)}
+  .btn.dl{background:linear-gradient(135deg,#A855F7,#7C3AED);color:#fff}
+  .big{width:100%;max-width:520px;padding:18px;border-radius:20px;background:linear-gradient(135deg,#FF6B9D,#A855F7,#06B6D4);color:#fff;font-size:15px;font-weight:900;border:none;cursor:pointer;box-shadow:0 14px 36px rgba(168,85,247,.4);margin-bottom:18px;font-family:inherit}
+  .big:active{transform:scale(.98)}
+  .note{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);border-radius:16px;padding:14px 18px;font-size:12.5px;color:#FBBF24;line-height:1.7;max-width:520px;margin-top:14px}
+  code{background:rgba(0,0,0,.3);padding:2px 6px;border-radius:6px;font-family:monospace;font-size:11.5px;direction:ltr;display:inline-block;color:#86EFAC}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px}
+  .modal.act{display:flex}
+  .modal-c{background:#151A2C;border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:22px;max-width:440px;width:100%}
+  .modal-t{font-size:17px;font-weight:900;margin-bottom:10px;text-align:center}
+  .modal-d{font-size:12.5px;color:#8B94AD;margin-bottom:16px;text-align:center;line-height:1.7}
+  .modal-a{display:block;padding:16px;border-radius:14px;background:linear-gradient(135deg,#A855F7,#7C3AED);color:#fff;font-weight:800;text-align:center;text-decoration:none;margin-bottom:10px;font-size:15px}
+  .modal-b{display:block;width:100%;padding:14px;border-radius:14px;background:rgba(255,255,255,.06);color:#F1F4FA;font-weight:800;border:1px solid rgba(255,255,255,.14);margin-bottom:10px;font-family:inherit;font-size:14px;cursor:pointer}
+  .modal-x{display:block;width:100%;padding:12px;border-radius:14px;background:transparent;color:#8B94AD;font-weight:700;border:none;font-family:inherit;font-size:13px;cursor:pointer}
+  .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(168,85,247,.95);color:#fff;padding:14px 22px;border-radius:16px;font-size:13px;font-weight:800;z-index:999999;transition:transform .3s;max-width:90vw;text-align:center;pointer-events:none}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<h1>🎵 Novira Sounds</h1>
+<div class="sub">3 أصوات فريدة مصممة خصيصاً لتطبيق Novira — صوت واضح وعالي</div>
+
+<button class="big" onclick="downloadAll()">⬇️ تحميل الكل (3 أصوات)</button>
+
+<div class="card">
+  <div class="icon c1">🔔</div>
+  <div class="info">
+    <div class="name">Novira Blip</div>
+    <div class="desc">المحادثات · 180ms</div>
+  </div>
+  <div class="btns">
+    <button class="btn play" onclick="preview('chat')">▶</button>
+    <button class="btn dl" onclick="download('chat')">⬇</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="icon c2">⭐</div>
+  <div class="info">
+    <div class="name">Novira Chime</div>
+    <div class="desc">المفضلة · جرس بلوري 650ms</div>
+  </div>
+  <div class="btns">
+    <button class="btn play" onclick="preview('fav')">▶</button>
+    <button class="btn dl" onclick="download('fav')">⬇</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="icon c3">👥</div>
+  <div class="info">
+    <div class="name">Novira Pop-Pop</div>
+    <div class="desc">المجموعات · نقرة مزدوجة 280ms</div>
+  </div>
+  <div class="btns">
+    <button class="btn play" onclick="preview('group')">▶</button>
+    <button class="btn dl" onclick="download('group')">⬇</button>
+  </div>
+</div>
+
+<div class="note">
+  💡 بعد التحميل: حط الملفات في <code>android/app/src/main/res/raw/</code><br>
+  الأسماء لازم تكون: <code>novira_chat.wav</code> — <code>novira_fav.wav</code> — <code>novira_group.wav</code>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-c">
+    <div class="modal-t" id="modal-t">ملف</div>
+    <div class="modal-d" id="modal-d">اختر طريقة الحفظ</div>
+    <a class="modal-a" id="modal-a" download>📥 حفظ الملف</a>
+    <button class="modal-b" onclick="copyLink()">📋 نسخ الرابط</button>
+    <button class="modal-x" onclick="closeModal()">إغلاق</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SR = 44100;
+
+// 🔔 Chat — نقرة دافية
+function designChat(ctx) {
+  const t = 0, dur = 0.18;
+  const o1 = ctx.createOscillator(); o1.type = 'sine'; o1.frequency.value = 880;
+  const o2 = ctx.createOscillator(); o2.type = 'sine'; o2.frequency.value = 1760;
+  const g1 = ctx.createGain();
+  g1.gain.setValueAtTime(0, t);
+  g1.gain.linearRampToValueAtTime(1.0, t + 0.005);
+  g1.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  const g2 = ctx.createGain(); g2.gain.value = 0.28;
+  o1.connect(g1);
+  o2.connect(g2).connect(g1);
+  g1.connect(ctx.destination);
+  o1.start(t); o1.stop(t + dur);
+  o2.start(t); o2.stop(t + dur);
+}
+
+// ⭐ Fav — جرس بلوري
+function strikeBell(ctx, freq, start, dur, amp) {
+  const hs = [1, 2.01, 3.03, 4.12, 5.43];
+  const as = [1, 0.45, 0.22, 0.12, 0.06];
+  hs.forEach(function(h, i) {
+    const o = ctx.createOscillator(); o.type = 'sine';
+    o.frequency.value = freq * h;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0, start);
+    g.gain.linearRampToValueAtTime(amp * as[i], start + 0.003);
+    g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+    o.connect(g).connect(ctx.destination);
+    o.start(start); o.stop(start + dur);
+  });
+}
+function designFav(ctx) {
+  strikeBell(ctx, 523.25, 0,    0.65, 0.35);
+  strikeBell(ctx, 1046.5, 0,    0.65, 1.0);
+  strikeBell(ctx, 1318.5, 0.09, 0.6,  0.85);
+}
+
+// 👥 Group — نقرتان صاعدتان
+function popStrike(ctx, freq, start, dur, amp) {
+  const o = ctx.createOscillator(); o.type = 'triangle';
+  o.frequency.setValueAtTime(freq * 1.35, start);
+  o.frequency.exponentialRampToValueAtTime(freq, start + 0.03);
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0, start);
+  g.gain.linearRampToValueAtTime(amp, start + 0.004);
+  g.gain.exponentialRampToValueAtTime(0.001, start + dur);
+  o.connect(g).connect(ctx.destination);
+  o.start(start); o.stop(start + dur);
+}
+function designGroup(ctx) {
+  popStrike(ctx, 659.25, 0,    0.11, 1.0);
+  popStrike(ctx, 783.99, 0.14, 0.13, 1.0);
+}
+
+// Rendering
+async function renderSound(designFn, duration) {
+  const ctx = new OfflineAudioContext(1, Math.ceil(SR * duration), SR);
+  designFn(ctx);
+  return await ctx.startRendering();
+}
+
+function normalize(buffer, peakTarget) {
+  peakTarget = peakTarget || 0.94;
+  let max = 0;
+  const d = buffer.getChannelData(0);
+  for (let i = 0; i < d.length; i++) if (Math.abs(d[i]) > max) max = Math.abs(d[i]);
+  if (max === 0) return buffer;
+  const k = peakTarget / max;
+  for (let i = 0; i < d.length; i++) d[i] *= k;
+  return buffer;
+}
+
+function bufferToWav(buffer) {
+  const numCh = buffer.numberOfChannels;
+  const len = buffer.length * numCh * 2 + 44;
+  const arr = new ArrayBuffer(len);
+  const view = new DataView(arr);
+  let pos = 0;
+  function u16(v){ view.setUint16(pos, v, true); pos += 2; }
+  function u32(v){ view.setUint32(pos, v, true); pos += 4; }
+  function str(s){ for (let i = 0; i < s.length; i++) view.setUint8(pos++, s.charCodeAt(i)); }
+
+  str('RIFF'); u32(len - 8); str('WAVE');
+  str('fmt '); u32(16); u16(1); u16(numCh);
+  u32(buffer.sampleRate); u32(buffer.sampleRate * numCh * 2);
+  u16(numCh * 2); u16(16);
+  str('data'); u32(len - pos - 4);
+
+  const chans = [];
+  for (let i = 0; i < numCh; i++) chans.push(buffer.getChannelData(i));
+  let samples;
+  if (numCh === 2) {
+    samples = new Float32Array(buffer.length * 2);
+    for (let i = 0, j = 0; i < buffer.length; i++) {
+      samples[j++] = chans[0][i]; samples[j++] = chans[1][i];
+    }
+  } else samples = chans[0];
+
+  for (let i = 0; i < samples.length; i++, pos += 2) {
+    let s = Math.max(-1, Math.min(1, samples[i]));
+    view.setInt16(pos, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+  }
+  return new Blob([view], { type: 'audio/wav' });
+}
+
+// Config
+const CONF = {
+  chat:  { design: designChat,  dur: 0.2,  file: 'novira_chat.wav'  },
+  fav:   { design: designFav,   dur: 0.7,  file: 'novira_fav.wav'   },
+  group: { design: designGroup, dur: 0.32, file: 'novira_group.wav' }
+};
+
+const cache = {};
+let lastBlob = null;
+let lastFilename = '';
+
+async function getBuffer(key) {
+  if (cache[key]) return cache[key];
+  const c = CONF[key];
+  const buf = await renderSound(c.design, c.dur);
+  normalize(buf, 0.94);
+  cache[key] = buf;
+  return buf;
+}
+
+async function preview(key) {
+  try {
+    const buf = await getBuffer(key);
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    if (ac.state === 'suspended') await ac.resume();
+    const src = ac.createBufferSource();
+    src.buffer = buf;
+    src.connect(ac.destination);
+    src.start();
+    src.onended = function(){ setTimeout(function(){ ac.close(); }, 100); };
+    toast('▶ ' + CONF[key].file);
+  } catch(e) {
+    toast('❌ تعذر التشغيل');
+  }
+}
+
+async function download(key) {
+  try {
+    const buf = await getBuffer(key);
+    const blob = bufferToWav(buf);
+    lastBlob = blob;
+    lastFilename = CONF[key].file;
+    toast('جاري التحضير...');
+
+    // جرّب المشاركة (تخدم داخل APK / WebView)
+    if (navigator.share) {
+      try {
+        const file = new File([blob], CONF[key].file, { type: 'audio/wav' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: CONF[key].file,
+            text: 'حفظ صوت Novira'
+          });
+          toast('✅ تم');
+          return;
+        }
+      } catch(e) {
+        if (e.name === 'AbortError') return;
+      }
+    }
+
+    // fallback: عرض نافذة
+    const reader = new FileReader();
+    reader.onload = function() {
+      showModal(CONF[key].file, reader.result);
+    };
+    reader.readAsDataURL(blob);
+  } catch(e) {
+    console.error(e);
+    toast('❌ خطأ: ' + e.message);
+  }
+}
+
+function showModal(filename, dataUri) {
+  document.getElementById('modal-t').textContent = filename;
+  document.getElementById('modal-d').textContent = 'اختر طريقة الحفظ — إذا الحفظ المباشر ما خدمش، دوس مطوّلاً على الزر واختر "تنزيل الرابط"';
+  const a = document.getElementById('modal-a');
+  a.href = dataUri;
+  a.download = filename;
+  a.textContent = '📥 حفظ ' + filename;
+  document.getElementById('modal').classList.add('act');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('act');
+}
+
+async function copyLink() {
+  const a = document.getElementById('modal-a');
+  try {
+    await navigator.clipboard.writeText(a.href);
+    toast('✅ تم نسخ الرابط');
+  } catch(e) {
+    toast('❌ تعذر النسخ');
+  }
+}
+
+async function downloadAll() {
+  const keys = ['chat', 'fav', 'group'];
+  toast('جاري تحضير 3 أصوات...');
+  for (let i = 0; i < keys.length; i++) {
+    await download(keys[i]);
+    await new Promise(function(r){ setTimeout(r, 600); });
+  }
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+
+// إغلاق المودال عند الضغط خارجه
+document.getElementById('modal').addEventListener('click', function(e){
+  if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>
