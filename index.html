@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0A0E1A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Novira</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+<!-- ═══════════════ SPLASH ═══════════════ -->
+<div class="sc act" id="sc-splash">
+  <div class="splash">
+    <svg class="splash-img" viewBox="0 0 500 1100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <radialGradient id="spBg" cx="15%" cy="12%" r="95%">
+          <stop offset="0%" stop-color="#6b1fa8"/>
+          <stop offset="35%" stop-color="#2d1060"/>
+          <stop offset="100%" stop-color="#08092a"/>
+        </radialGradient>
+        <linearGradient id="spBub" x1="10%" y1="10%" x2="90%" y2="90%">
+          <stop offset="0%" stop-color="#FF35BF"/>
+          <stop offset="45%" stop-color="#A855F7"/>
+          <stop offset="100%" stop-color="#00CFFF"/>
+        </linearGradient>
+        <linearGradient id="spTxt" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#FF5EDB"/>
+          <stop offset="50%" stop-color="#A855F7"/>
+          <stop offset="100%" stop-color="#00D4FF"/>
+        </linearGradient>
+        <filter id="spGlow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="6" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <rect width="500" height="1100" fill="url(#spBg)"/>
+      <path d="M 250 260 C 165 260 105 315 105 385 C 105 425 122 455 152 475 L 142 515 C 140 527 154 533 163 525 L 197 495 C 213 499 231 501 250 501 C 335 501 395 451 395 385 C 395 315 335 260 250 260 Z" fill="none" stroke="url(#spBub)" stroke-width="24" stroke-linejoin="round" stroke-linecap="round" filter="url(#spGlow)"/>
+      <circle cx="195" cy="385" r="16" fill="#FF35BF"/>
+      <circle cx="250" cy="385" r="16" fill="#B65CFF"/>
+      <circle cx="305" cy="385" r="16" fill="#00CFFF"/>
+      <text x="250" y="760" text-anchor="middle" font-family="Cairo,Arial,sans-serif" font-weight="900" font-size="82" fill="url(#spTxt)" letter-spacing="1">Noviraa</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══════════════ LOGIN ═══════════════ -->
+<div class="sc" id="sc-login">
+  <div class="auth">
+    <div class="auth-logo">N</div>
+    <div class="auth-t">مرحباً بك</div>
+    <div class="auth-d">سجّل دخولك</div>
+    <div class="err" id="login-error"></div>
+    <div class="ig">
+      <label class="il">رقم الهاتف</label>
+      <div class="if">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <input type="tel" id="login-phone" placeholder="0555123456" inputmode="tel" autocomplete="tel">
+      </div>
+    </div>
+    <div class="ig">
+      <label class="il">رمز الدخول</label>
+      <div class="if">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <input type="tel" id="login-pass" class="pin" placeholder="------" maxlength="6" inputmode="numeric">
+      </div>
+    </div>
+    <button class="abtn" id="login-btn" onclick="doLog()" type="button">دخول</button>
+    <div class="alink">ليس لديك حساب؟ <button onclick="go('register')" type="button">أنشئ واحداً</button></div>
+  </div>
+</div>
+
+<!-- ═══════════════ REGISTER ═══════════════ -->
+<div class="sc" id="sc-register">
+  <div class="auth" id="register-step1">
+    <div class="auth-logo" id="reg-logo-preview">N</div>
+    <div class="auth-t">انضم إلى Novira</div>
+    <div class="auth-d">الخطوة 1 من 2: معلوماتك</div>
+    <div class="err" id="reg-error"></div>
+    <div style="display:flex;justify-content:center;margin-bottom:20px">
+      <button onclick="document.getElementById('reg-avatar-input').click()" type="button" style="background:rgba(255,255,255,.06);border:1px dashed var(--b2);color:var(--t);padding:14px 24px;border-radius:16px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer">📷 إضافة صورة بروفايل</button>
+    </div>
+    <input type="file" id="reg-avatar-input" accept="image/*" style="display:none" onchange="handleRegAvatar(this.files[0])">
+    <div class="ig">
+      <label class="il">الاسم</label>
+      <div class="if">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <input type="text" id="reg-name" placeholder="اسمك" maxlength="30" autocomplete="name">
+      </div>
+    </div>
+    <div class="ig">
+      <label class="il">اسم المستخدم</label>
+      <div class="if">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l8 8-8 8"/><path d="M12 4l8 8-8 8"/></svg>
+        <input type="text" id="reg-username" placeholder="username" maxlength="20" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <span id="reg-username-status" style="font-size:18px"></span>
+      </div>
+      <div id="reg-username-hint" style="font-size:11.5px;color:var(--t3);margin-top:6px;padding-right:6px">3-20 حرف، أرقام، _</div>
+    </div>
+    <button class="abtn" id="reg-next-btn" onclick="regGoStep2()" type="button">التالي ←</button>
+    <div class="alink">لديك حساب؟ <button onclick="go('login')" type="button">دخول</button></div>
+  </div>
+
+  <div class="auth" id="register-step2" style="display:none">
+    <div class="auth-logo">🔐</div>
+    <div class="auth-t">معلومات الأمان</div>
+    <div class="auth-d">الخطوة 2 من 2</div>
+    <div class="err" id="reg-error2"></div>
+    <div class="ig">
+      <label class="il">رقم الهاتف</label>
+      <div class="if">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <input type="tel" id="reg-phone" placeholder="0555123456" inputmode="tel" autocomplete="tel">
+      </div>
+    </div>
+    <div class="ig">
+      <label class="il">رمز الدخول (6 أرقام)</label>
+      <div class="if">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <input type="tel" id="reg-pass" class="pin" placeholder="------" maxlength="6" inputmode="numeric">
+      </div>
+    </div>
+    <button class="abtn" id="reg-btn" onclick="doReg()" type="button">إنشاء الحساب</button>
+    <div class="alink"><button onclick="regBackStep1()" type="button">← رجوع للخطوة 1</button></div>
+  </div>
+</div>
+
+<!-- ═══════════════ CHATS ═══════════════ -->
+<div class="sc" id="sc-chats">
+  <div class="hd">
+    <div class="hd-r">
+      <div style="min-width:0;flex:1">
+        <div class="hd-g" id="hero-greet">مرحباً</div>
+        <div class="hd-n" id="hero-name">Novira</div>
+      </div>
+      <div class="hd-av avp" id="hero-avatar" onclick="go('settings')"></div>
+    </div>
+  </div>
+  <div class="chats-scroll">
+    <div class="sbar" onclick="openSearch()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="text" placeholder="ابحث..." readonly>
+    </div>
+    <div id="fav-section" style="display:none">
+      <div class="fav-hd"><span>★ المفضلة</span><span id="fav-count-label" style="font-size:11px;color:var(--t3)"></span></div>
+      <div class="fav-scroll" id="fav-scroll"></div>
+    </div>
+    <div class="sec-h"><span class="sec-t">المحادثات</span><span class="sec-a" id="chats-count">0</span></div>
+    <div class="clist" id="chats-list"></div>
+    <div class="empty" id="chats-empty">
+      <div class="empty-ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:52px;height:52px"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      </div>
+      <div class="empty-t">ابدأ</div>
+      <div class="empty-d">تواصل مع أصدقائك</div>
+      <button class="empty-b" onclick="openSheet('fab')" type="button">محادثة جديدة</button>
+    </div>
+  </div>
+  <button class="fab" onclick="openSheet('fab')" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+  <div class="bnav">
+    <button class="nb act" onclick="go('chats')" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      <span>الدردشات</span>
+    </button>
+    <button class="nb" onclick="openSearch()" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <span>بحث</span>
+    </button>
+    <button class="nb" onclick="go('settings')" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>إعدادات</span>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════ CHAT ═══════════════ -->
+<div class="sc" id="sc-chat">
+  <div class="ch">
+    <button class="bk" onclick="go('chats')" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 18 6-6-6-6"/></svg>
+    </button>
+    <div class="av" id="chat-av">؟</div>
+    <div class="ch-i" id="chat-header-info" onclick="menuProf()">
+      <div class="ch-n" id="chat-n">محادثة</div>
+      <div class="ch-s" id="chat-s"></div>
+    </div>
+    <button class="bk" onclick="openChatMenu(event)" type="button" style="width:40px;height:40px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+    </button>
+  </div>
+  <div class="cbody" id="chat-body"></div>
+  <div class="reply-bar" id="reply-bar">
+    <button class="rc" onclick="cancelReply()" type="button">✕</button>
+    <div class="rn" id="reply-name"></div>
+    <div class="rt" id="reply-text"></div>
+  </div>
+  <div class="mention-menu" id="mention-menu"></div>
+  <div class="comp" id="main-composer">
+    <button class="cbtn" onclick="toggleEmoji()" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+    </button>
+    <div class="comp-in">
+      <textarea id="msg-input" placeholder="رسالة..." rows="1" enterkeyhint="enter"></textarea>
+      <button class="clear-btn" id="clear-btn" onclick="clrMsgInp()" type="button" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <button class="cbtn" onclick="openSheet('attach')" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+    </button>
+    <button class="send-btn" id="send-btn" onclick="onSendBtn()" type="button">
+      <svg id="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg>
+    </button>
+  </div>
+  <div class="read-only-banner" id="read-only-banner">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <span id="read-only-text">لا يمكنك الكتابة</span>
+  </div>
+  <div class="rec-ov" id="rec-ov">
+    <span class="rec-dot"></span>
+    <span class="rec-t" id="rec-t">0:00</span>
+    <span class="rec-h" id="rec-h">اسحب للأعلى للقفل</span>
+    <span class="rec-lk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+  </div>
+  <div class="lk-bar" id="lk-bar">
+    <button class="lk-del" id="lk-del" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+    </button>
+    <div class="lk-mid">
+      <div class="lk-top">
+        <span class="lk-dot"></span>
+        <span class="lk-t" id="lk-t">0:00</span>
+        <div class="lk-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+    </div>
+    <button class="lk-pause" id="lk-pause-btn" type="button">
+      <svg viewBox="0 0 24 24" fill="currentColor" id="lk-pause-icon"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+    </button>
+    <button class="lk-send" id="lk-send-btn" type="button">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════ SETTINGS ═══════════════ -->
+<div class="sc" id="sc-settings">
+  <div class="ct" style="padding-top:0">
+    <div class="prof-hero" id="profile-hero">
+      <div class="prof-av avp" id="profile-av"></div>
+      <div class="prof-n" id="profile-n">—</div>
+      <div class="prof-p" id="profile-p" onclick="copyMyUsername()">—</div>
+    </div>
+    <div class="sec-h"><span class="sec-t">الإعدادات</span></div>
+    <div class="sgrid">
+      <button class="tile" onclick="openQR()" type="button">
+        <div class="tile-ic bl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/></svg></div>
+        <div class="tile-t">رمزي الشخصي</div>
+      </button>
+      <button class="tile" onclick="editProf()" type="button">
+        <div class="tile-ic pu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div class="tile-t">تعديل الملف</div>
+      </button>
+      <button class="tile" onclick="openFavMgr()" type="button">
+        <div class="tile-ic pk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg></div>
+        <div class="tile-t">المفضلة</div>
+        <div class="tile-s" id="fav-tile-count" data-count="0" style="display:none">0</div>
+      </button>
+      <button class="tile" onclick="checkMic()" type="button">
+        <div class="tile-ic yl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg></div>
+        <div class="tile-t">اختبار الميكروفون</div>
+      </button>
+      <button class="tile" onclick="cDelAcc()" type="button">
+        <div class="tile-ic gy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>
+        <div class="tile-t">حذف الحساب</div>
+      </button>
+      <button class="tile" onclick="openBlocked()" type="button">
+        <div class="tile-ic rd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 14.14 14.14"/></svg></div>
+        <div class="tile-t">المحظورون</div>
+      </button>
+    </div>
+    <!-- ⚡ زر تسجيل الخروج (wide مستقل) -->
+    <div class="logout-wrap">
+      <button class="tile wide logout-tile" onclick="openSheet('logout')" type="button">
+        <div class="tile-ic rd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg></div>
+        <div class="tile-t">🚪 تسجيل الخروج</div>
+      </button>
+    </div>
+  </div>
+  <div class="bnav">
+    <button class="nb" onclick="go('chats')" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      <span>الدردشات</span>
+    </button>
+    <button class="nb" onclick="openSearch()" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <span>بحث</span>
+    </button>
+    <button class="nb act" onclick="go('settings')" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>إعدادات</span>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════ CALLS ═══════════════ -->
+<div class="sc" id="sc-call">
+  <div class="call-screen">
+    <div style="text-align:center">
+      <div class="call-avatar ringing" id="call-avatar">؟</div>
+      <div class="call-name" id="call-name">—</div>
+      <div class="call-status" id="call-status">جاري الاتصال...</div>
+    </div>
+    <div class="call-actions">
+      <button class="call-action" onclick="toggleMute()" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg></button>
+      <button class="call-action" onclick="toggleSpeaker()" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+      <button class="call-action invite" onclick="inviteToCall()" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></button>
+      <button class="call-action" onclick="toggleCallMsgPanel()" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></button>
+      <button class="call-action end" onclick="endCurrentCall()" type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.1-.7-.28-.79-.73-1.68-1.36-2.66-1.85-.33-.16-.56-.51-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg></button>
+    </div>
+    <div class="call-message-panel" id="call-message-panel">
+      <div class="call-message-header"><span>رسالة</span><button class="call-message-close" onclick="toggleCallMsgPanel()" type="button">✕</button></div>
+      <div class="call-message-input-row"><textarea id="call-msg-in" placeholder="اكتب..." rows="1"></textarea><button class="call-message-send" onclick="sendCallMsg()" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button></div>
+    </div>
+  </div>
+</div>
+
+<div class="sc" id="sc-video">
+  <div class="video-container">
+    <video class="video-remote" id="video-remote" autoplay playsinline></video>
+    <video class="video-local" id="video-local" autoplay playsinline muted></video>
+    <div class="video-overlay">
+      <div class="video-info"><div class="video-name" id="video-name">—</div><div class="video-status" id="video-status">جاري الاتصال...</div></div>
+      <div class="call-actions">
+        <button class="call-action" onclick="toggleMute()" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg></button>
+        <button class="call-action" onclick="toggleCamera()" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m23 7-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></button>
+        <button class="call-action" onclick="switchCamera()" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 5h-3l-2-2h-6L7 5H4v14h16V5z"/><circle cx="12" cy="12" r="4"/><path d="M17 3l2 2-2 2M7 21l-2-2 2-2"/></svg></button>
+        <button class="call-action invite" onclick="inviteToCall()" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></button>
+        <button class="call-action" onclick="toggleCallMsgPanel()" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></button>
+        <button class="call-action end" onclick="endCurrentCall()" type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.1-.7-.28-.79-.73-1.68-1.36-2.66-1.85-.33-.16-.56-.51-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg></button>
+      </div>
+      <div class="call-message-panel" id="call-message-panel-v">
+        <div class="call-message-header"><span>رسالة</span><button class="call-message-close" onclick="toggleCallMsgPanel()" type="button">✕</button></div>
+        <div class="call-message-input-row"><textarea id="call-msg-in-v" placeholder="اكتب..." rows="1"></textarea><button class="call-message-send" onclick="sendCallMsg()" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sc" id="sc-incoming">
+  <div class="call-screen">
+    <div style="text-align:center">
+      <div class="call-avatar ringing" id="incoming-avatar">؟</div>
+      <div class="call-name" id="incoming-name">—</div>
+      <div class="call-status" id="incoming-type">مكالمة واردة</div>
+    </div>
+    <div class="call-actions">
+      <button class="call-action end" onclick="rejectIncoming()" type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.1-.7-.28-.79-.73-1.68-1.36-2.66-1.85-.33-.16-.56-.51-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg></button>
+      <button class="call-action accept" onclick="acceptIncoming()" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SHEETS ═══════════════ -->
+<div class="sheet" id="sh-fab" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">إنشاء</div>
+    <button class="ao" onclick="closeSheet();openNewChat()" type="button"><div class="aic bl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div><div class="ainfo"><div class="atitle">محادثة جديدة</div></div></button>
+    <button class="ao" onclick="closeSheet();openNewGroup()" type="button"><div class="aic gr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="ainfo"><div class="atitle">مجموعة جديدة</div></div></button>
+    <button class="ao" onclick="closeSheet();openQR()" type="button"><div class="aic ye"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/></svg></div><div class="ainfo"><div class="atitle">رمزي الشخصي</div></div></button>
+    <button class="ao" onclick="closeSheet();openQRScan()" type="button"><div class="aic pu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg></div><div class="ainfo"><div class="atitle">مسح QR</div></div></button>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إلغاء</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-new" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">محادثة جديدة</div>
+    <label class="il">📱 رقم الهاتف</label>
+    <input type="tel" class="sheet-i" id="new-phone" placeholder="0555123456" inputmode="tel" autocomplete="off">
+    <div style="display:flex;align-items:center;gap:10px;margin:0 0 14px"><div style="flex:1;height:1px;background:var(--b)"></div><div style="font-size:11px;font-weight:800;color:var(--t3)">أو</div><div style="flex:1;height:1px;background:var(--b)"></div></div>
+    <label class="il">👤 اسم المستخدم</label>
+    <input type="text" class="sheet-i" id="new-username" placeholder="@username" autocomplete="off">
+    <button class="sheet-b" onclick="createChat()" type="button">بدء المحادثة</button>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إلغاء</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-profile" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">تعديل الملف</div>
+    <div style="display:flex;justify-content:center;margin:6px 0 16px"><div class="av avp" id="edit-av" style="width:96px;height:96px;border-radius:28px;font-size:36px" onclick="pickAv()"></div></div>
+    <button class="sheet-b" onclick="pickAv()" type="button">تغيير الصورة</button>
+    <input type="text" class="sheet-i" id="edit-name" placeholder="الاسم" maxlength="30">
+    <input type="text" class="sheet-i" id="edit-username" placeholder="اسم المستخدم" maxlength="20" autocomplete="off">
+    <textarea class="sheet-i" id="edit-bio" placeholder="نبذة..." maxlength="150" rows="3"></textarea>
+    <button class="sheet-b" onclick="updProf()" type="button">حفظ</button>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إلغاء</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-user" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t" id="user-act-name">—</div>
+    <button class="sheet-b" id="block-btn" onclick="toggleBlk()" type="button">🚫 حظر</button>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إلغاء</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-blocked" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">المحظورون</div>
+    <div id="blocked-list"></div>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إغلاق</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-search" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">بحث</div>
+    <input type="text" class="sheet-i" id="search-input" placeholder="ابحث..." oninput="doSearch()" autocomplete="off">
+    <div class="search-tabs" id="search-tabs">
+      <button class="search-tab act" id="search-tab-all" onclick="switchTab('all')" type="button">الكل</button>
+      <button class="search-tab" id="search-tab-mine" onclick="switchTab('mine')" type="button">مجموعاتي</button>
+      <button class="search-tab" id="search-tab-member" onclick="switchTab('member')" type="button">ضموني</button>
+    </div>
+    <div id="search-results"></div>
+  </div>
+</div>
+
+<div class="sheet" id="sh-mic" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">🎤 الميكروفون</div>
+    <div class="sheet-d" id="mic-msg"></div>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">حسناً</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-attach" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">إرسال مرفق</div>
+    <button class="ao" onclick="pickCam()" type="button"><div class="aic pu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div><div class="ainfo"><div class="atitle">التقاط صورة</div></div></button>
+    <button class="ao" onclick="pickImg()" type="button"><div class="aic bl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></div><div class="ainfo"><div class="atitle">صورة</div></div></button>
+    <button class="ao" onclick="pickVid()" type="button"><div class="aic gr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m23 7-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div class="ainfo"><div class="atitle">فيديو</div></div></button>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إلغاء</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-del" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">حذف الرسالة</div>
+    <button class="sheet-b sec" onclick="delMe()" type="button">حذف عندي فقط</button>
+    <button class="sheet-b dng" onclick="delAll()" type="button">حذف للجميع</button>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إلغاء</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-my-qr" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t" style="text-align:center">رمزي الشخصي</div>
+    <div class="qr-info" id="my-qr-info"></div>
+    <div class="qr-wrap"><div id="my-qr-code"></div><div class="qr-user" id="my-qr-user" onclick="copyQRUsername()" style="cursor:pointer"></div><div class="qr-url" id="my-qr-url"></div></div>
+    <div class="qr-actions-row"><button class="sheet-b" onclick="cpyQR()" type="button">📋 نسخ الرابط</button><button class="sheet-b" onclick="shareQR()" type="button">📤 مشاركة</button></div>
+    <button class="sheet-b sec" style="margin-top:10px" onclick="closeSheet()" type="button">إغلاق</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-qr-scanner" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t" style="text-align:center">مسح QR</div>
+    <div class="qr-scanner-box" id="qr-reader"></div>
+    <div class="qr-gallery-area" onclick="pickQRI()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><div class="qr-gallery-area-title">أو اختر صورة</div></div>
+    <button class="sheet-b sec" onclick="closeQRScan()" type="button">إغلاق</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-profile-card" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="profile-card"><div class="av avp" id="pc-av"></div><div class="name" id="pc-name">—</div><div class="username" id="pc-user" style="cursor:pointer" onclick="copyPCUsername()">—</div><div class="bio" id="pc-bio" style="font-size:13px;color:var(--t2);text-align:center;margin-top:8px;padding:0 20px"></div></div>
+    <div class="profile-card-actions"><button class="msg-btn" onclick="msgFromCard()" type="button">💬 مراسلة</button><button class="qr-btn" onclick="qrFromCard()" type="button">📱 QR</button></div>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button" style="margin-top:8px">إغلاق</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-del-account" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t" style="color:#FCA5A5">⚠️ حذف الحساب</div>
+    <div class="sheet-d">لا يمكن التراجع. اكتب "حذف" للتأكيد.</div>
+    <input type="text" class="sheet-i" id="del-acc-confirm" placeholder='اكتب "حذف"' autocomplete="off" oninput="onDelAccInput(this.value)">
+    <button class="sheet-b dng" onclick="doDelAcc()" id="del-acc-btn" type="button" disabled>🗑️ حذف نهائي</button>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إلغاء</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-logout" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t" style="text-align:center">🚪 تسجيل الخروج</div>
+    <div class="sheet-d" style="text-align:center">هل أنت متأكد من تسجيل الخروج من حسابك؟</div>
+    <button class="sheet-b dng" onclick="confirmLogout()" type="button">نعم، تسجيل الخروج</button>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إلغاء</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-grp-step1" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">👥 اختر الأعضاء</div>
+    <div class="sheet-d" style="margin-top:-4px">اختر الأشخاص الذين تريد إضافتهم للمجموعة</div>
+    <input type="text" class="sheet-i" id="grp-step1-search" placeholder="🔍 ابحث بالاسم أو @username..." oninput="renderGrpStep1List(this.value)" autocomplete="off">
+    <div id="grp-step1-list" style="max-height:45vh;overflow-y:auto;margin-bottom:14px"></div>
+    <button class="sheet-b" id="grp-step1-next" onclick="goToGrpStep2()" type="button">التالي ← <span id="grp-step1-count"></span></button>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إلغاء</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-grp-step2" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">📝 تفاصيل المجموعة</div>
+    <div class="edit-group-header"><div class="av" id="grp-step2-avatar" onclick="document.getElementById('file-grp-step2-avatar').click()" style="width:110px;height:110px;border-radius:34px;font-size:42px;cursor:pointer;background:linear-gradient(135deg,#22C55E,#06B6D4);display:flex;align-items:center;justify-content:center;color:#fff">📷</div><div style="font-size:12px;color:var(--t3);text-align:center;margin-top:4px">📷 اضغط لإضافة شعار (اختياري)</div></div>
+    <input type="text" class="sheet-i" id="grp-step2-name" placeholder="اسم المجموعة" maxlength="40" autocomplete="off" style="text-align:center;font-weight:800;font-size:16px">
+    <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:rgba(255,255,255,.04);border:1px solid var(--b);border-radius:14px;margin-bottom:14px"><span style="font-size:18px">👥</span><span style="font-size:13px;color:var(--t2);font-weight:700"><span id="grp-step2-count">0</span> عضو مختار</span></div>
+    <button class="sheet-b" onclick="createGroupFinal()" type="button">✅ إنشاء المجموعة</button>
+    <button class="sheet-b sec" onclick="backToGrpStep1()" type="button">← رجوع</button>
+  </div>
+</div>
+<input type="file" id="file-grp-step2-avatar" accept="image/*" style="display:none" onchange="handleGrpStep2Avatar(this.files[0])">
+
+<div class="sheet" id="sh-group-info" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">معلومات المجموعة</div>
+    <div class="edit-group-header"><div class="av" id="gi-avatar" style="width:100px;height:100px;border-radius:32px;font-size:38px"></div><input type="text" class="edit-name-input" id="gi-name-input" placeholder="اسم المجموعة" maxlength="40" readonly><div id="gi-count" style="font-size:13px;color:var(--t2);font-weight:700">—</div></div>
+    <button class="sheet-b" id="gi-save-btn" onclick="saveGroupProfile()" type="button" style="display:none;margin-bottom:14px">💾 حفظ</button>
+    <div class="sheet-d" style="margin-bottom:8px">صلاحيات الكتابة</div>
+    <div class="gtg-row" id="row-only-admins" style="display:none"><div><div class="gtg-t">🔒 المشرفون فقط</div><div class="gtg-s">يتجاوز الأقلام</div></div><button class="gtg" id="only-admins-toggle" onclick="toggleOnlyAdmins()" type="button"></button></div>
+    <div class="sheet-d" style="margin:14px 0 8px">الأعضاء (<span id="gi-members-count">0</span>)</div>
+    <div id="gi-members-list" style="max-height:38vh;overflow-y:auto;margin-bottom:14px"></div>
+    <button class="sheet-b" id="gi-add-btn" onclick="openAddMembers()" type="button" style="display:none">➕ إضافة أعضاء</button>
+    <button class="sheet-b gold" id="gi-transfer-btn" onclick="openTransferOwnership()" type="button" style="display:none">👑 نقل ملكية المجموعة</button>
+    <div class="owner-note" id="owner-note" style="display:none">👑 أنت صاحب المجموعة — لا يمكنك المغادرة.<br>يمكنك حذف المجموعة، أو نقل الملكية لعضو.</div>
+    <button class="sheet-b dng" onclick="leaveGroup()" id="gi-leave-btn" type="button">🚪 مغادرة</button>
+    <button class="sheet-b dng" onclick="deleteGroup()" id="gi-delete-btn" type="button" style="display:none">🗑️ حذف المجموعة</button>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إغلاق</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-add-members" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">إضافة أعضاء</div>
+    <input type="text" class="sheet-i" id="add-members-search" placeholder="ابحث..." oninput="filterAddMembers()">
+    <div id="add-members-list" style="max-height:50vh;overflow-y:auto;margin-bottom:14px"></div>
+    <button class="sheet-b" onclick="confirmAddMembers()" type="button">إضافة</button>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إلغاء</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-member-actions" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t" id="ma-name">—</div>
+    <div id="ma-role-info" style="font-size:12px;color:var(--t2);text-align:center;margin-bottom:14px">—</div>
+    <button class="sheet-b" id="ma-pencil-btn" onclick="maActionPencil()" type="button" style="display:none">✏️ <span id="ma-pencil-label">منح القلم</span></button>
+    <button class="sheet-b" id="ma-edit-group-btn" onclick="maActionEditGroupPermission()" type="button" style="display:none">📝 <span id="ma-edit-group-label">منح صلاحية التعديل</span></button>
+    <button class="sheet-b" id="ma-promote-btn" onclick="maActionPromote()" type="button" style="display:none">⭐ ترقية لمشرف</button>
+    <button class="sheet-b" id="ma-demote-btn" onclick="maActionDemote()" type="button" style="display:none">⬇️ تنزيل لعضو</button>
+    <button class="sheet-b gold" id="ma-transfer-btn" onclick="maActionTransfer()" type="button" style="display:none">👑 نقل الملكية له</button>
+    <button class="sheet-b dng" id="ma-kick-btn" onclick="maActionKick()" type="button" style="display:none">🚫 طرد من المجموعة</button>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إلغاء</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-transfer-owner" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">👑 نقل الملكية</div>
+    <div class="sheet-d">اختر العضو الذي سيصبح صاحب المجموعة.</div>
+    <input type="text" class="sheet-i" id="transfer-search" placeholder="ابحث..." oninput="filterTransferList()">
+    <div id="transfer-members-list" style="max-height:50vh;overflow-y:auto;margin-bottom:14px"></div>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إلغاء</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-favorites" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">⭐ المفضلة</div>
+    <div id="favorites-manager-list" style="max-height:50vh;overflow-y:auto;margin-bottom:14px"></div>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إغلاق</button>
+  </div>
+</div>
+
+<!-- ⚡ معلومات الرسالة — مع زر رجوع + قائمة القراء -->
+<div class="sheet" id="sh-msg-info" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="info-header">
+      <button class="bk" onclick="closeSheet()" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <div class="sheet-t" style="margin:0;flex:1">📄 معلومات الرسالة</div>
+    </div>
+    <div id="msg-info-content"></div>
+  </div>
+</div>
+
+<div class="sheet" id="sh-forward" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">توجيه إلى...</div>
+    <div id="forward-list"></div>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button" style="margin-top:8px">إلغاء</button>
+  </div>
+</div>
+
+<div class="sheet" id="sh-media-menu" onclick="closeSheet(event)">
+  <div class="sheet-c" onclick="event.stopPropagation()">
+    <div class="sheet-h"></div>
+    <div class="sheet-t">خيارات الوسائط</div>
+    <button class="sheet-b suc" onclick="saveMedia()" type="button">📥 حفظ في الجهاز</button>
+    <button class="sheet-b" onclick="closeSheet();shareMedia()" type="button">📤 مشاركة</button>
+    <button class="sheet-b dng" onclick="closeSheet();if(selectedMessage)menuDelete()" type="button">🗑️ حذف</button>
+    <button class="sheet-b sec" onclick="closeSheet()" type="button">إلغاء</button>
+  </div>
+</div>
+
+<!-- MESSAGE MENU -->
+<div class="msg-menu" id="msg-menu">
+  <div class="menu-react" style="display:flex;justify-content:space-around;padding:14px 10px;gap:2px;background:rgba(255,255,255,.03)">
+    <button onclick="setReact('👍')" type="button" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.06);font-size:22px;border:0;color:inherit">👍</button>
+    <button onclick="setReact('❤️')" type="button" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.06);font-size:22px;border:0;color:inherit">❤️</button>
+    <button onclick="setReact('😂')" type="button" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.06);font-size:22px;border:0;color:inherit">😂</button>
+    <button onclick="setReact('😮')" type="button" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.06);font-size:22px;border:0;color:inherit">😮</button>
+    <button onclick="setReact('😢')" type="button" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.06);font-size:22px;border:0;color:inherit">😢</button>
+    <button onclick="setReact('🙏')" type="button" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.06);font-size:22px;border:0;color:inherit">🙏</button>
+  </div>
+  <div style="height:1px;background:var(--b);margin:0"></div>
+  <div style="padding:8px 0">
+    <button class="mmi" onclick="menuReply()" type="button">رد</button>
+    <button class="mmi" onclick="menuCopy()" type="button">نسخ</button>
+    <button class="mmi" onclick="menuForward()" type="button">توجيه</button>
+    <button class="mmi" id="menu-edit-btn" onclick="menuEdit()" type="button">✏️ تعديل</button>
+    <button class="mmi" onclick="menuInfo()" type="button">معلومات</button>
+    <button class="mmi dng" onclick="menuDelete()" type="button">حذف</button>
+  </div>
+</div>
+
+<div class="cdd" id="chat-dropdown">
+  <button class="cdd-i" onclick="menuCallV()" type="button">📞 مكالمة صوتية</button>
+  <button class="cdd-i" onclick="menuCallVi()" type="button">📹 مكالمة فيديو</button>
+  <button class="cdd-i" onclick="toggleFav()" id="fav-toggle-item" type="button">⭐ <span>إضافة للمفضلة</span></button>
+  <button class="cdd-i" onclick="menuProf()" type="button">👤 عرض الملف</button>
+  <button class="cdd-i" onclick="menuGroupInfo()" id="grp-info-btn" type="button" style="display:none">ℹ️ معلومات المجموعة</button>
+  <button class="cdd-i dng" onclick="menuBlock()" type="button">🚫 حظر</button>
+</div>
+
+<div class="mv" id="mv" onclick="if(event.target===this)closeVw()">
+  <button class="mv-cl" onclick="closeVw()" type="button">✕</button>
+  <button class="mv-cl" type="button" style="right:auto;left:20px" onclick="event.stopPropagation();saveMedia()">📥</button>
+  <div class="mv-c" id="viewer-content"></div>
+</div>
+
+<div class="mp" id="mp">
+  <div class="mp-hd"><button class="mp-cl" onclick="closePrev()" type="button">✕</button><div class="mp-t">معاينة</div><div style="width:42px"></div></div>
+  <div class="mp-bd"><div id="pc"></div></div>
+  <div class="mp-ft">
+    <textarea class="cap" id="media-caption" placeholder="تعليق..." rows="1"></textarea>
+    <div class="mp-prog" id="media-progress"><div class="mp-prog-bar" id="media-progress-bar"></div></div>
+    <div class="mp-ac"><button class="c" onclick="closePrev()" type="button">إلغاء</button><button class="s" id="media-send-btn" onclick="sendMedia()" type="button"><span id="media-send-text">إرسال</span></button></div>
+  </div>
+</div>
+
+<div class="ep" id="emoji-picker">
+  <div class="ep-tb">
+    <div class="ep-pill">
+      <button class="pill-btn act" id="pill-emoji" onclick="switchEmojiTab('emoji')" type="button">😀</button>
+      <button class="pill-btn" id="pill-gif" onclick="switchEmojiTab('gif')" type="button">GIF</button>
+      <button class="pill-btn" id="pill-sticker" onclick="switchEmojiTab('sticker')" type="button">🎨</button>
+    </div>
+    <button class="ep-btn" onclick="bspEmoji()" type="button">⌫</button>
+  </div>
+  <div class="ep-cl" id="emoji-cat">إيموجي</div>
+  <div class="ep-g" id="emoji-grid"></div>
+  <div class="ep-bt" id="emoji-tabs"></div>
+</div>
+
+<input type="file" id="file-image" accept="image/*" style="display:none" onchange="handleFileSel(this.files[0])">
+<input type="file" id="file-video" accept="video/*" style="display:none" onchange="handleFileSel(this.files[0])">
+<input type="file" id="file-camera" accept="image/*" capture="environment" style="display:none" onchange="handleFileSel(this.files[0])">
+<input type="file" id="file-avatar" accept="image/*" style="display:none" onchange="handleAvSel(this.files[0])">
+<input type="file" id="file-qr-scan" accept="image/*" style="display:none" onchange="handleQRI(this.files[0])">
+<input type="file" id="file-group-avatar" accept="image/*" style="display:none" onchange="handleGrpAvSel(this.files[0])">
+
+<audio id="remote-audio" autoplay playsinline></audio>
+<div class="sheet-bg" id="sheet-bg" onclick="closeSheet()"></div>
+<div class="toast" id="toast"></div>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>
