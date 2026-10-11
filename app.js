@@ -104,8 +104,6 @@ function out(q){
  if(!q&&t)fetch(SB+'/auth/v1/logout',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+t}}).catch(()=>{});
  $('#nav').hidden=true;show('auth')
 }
-const online=()=>me&&pat('profiles','id=eq.'+me.id,{last_seen:new Date().toISOString()}).catch(()=>{});
-
 /* ═══════════════ قائمة المحادثات ═══════════════ */
 const oth=c=>c.user1_id==me.id?c.user2_id:c.user1_id,
  nm=c=>c.is_group?c.group_name:(P[oth(c)]?.name||'مستخدم');
