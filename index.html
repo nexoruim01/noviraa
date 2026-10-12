@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تجربة</title>
+<style>
+body{
+  font-family:system-ui,sans-serif;
+  background:linear-gradient(135deg,#17c3a5,#0b7f8f);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  margin:0;
+  text-align:center;
+  padding:20px;
+}
+.box{
+  background:rgba(255,255,255,.15);
+  padding:40px 30px;
+  border-radius:24px;
+  backdrop-filter:blur(10px);
+  max-width:400px;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+}
+h1{font-size:48px;margin:0 0 10px}
+p{font-size:18px;line-height:1.6;margin:10px 0}
+.time{font-size:14px;opacity:.8;margin-top:20px;font-family:monospace;direction:ltr}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>✅</h1>
+  <h2>GitHub Pages يعمل!</h2>
+  <p>إذا رأيت هذه الصفحة، فالرفع ناجح والمشكلة كانت في الكود فقط.</p>
+  <div class="time" id="t"></div>
+</div>
+<script>
+document.getElementById('t').textContent=new Date().toLocaleString('en-GB');
+</script>
+</body>
+</html>
