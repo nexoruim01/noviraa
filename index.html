@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>اختبار</title>
+</head>
+<body style="font-family:sans-serif;padding:30px;background:#fbf8f3">
+<h1 id="r">جاري التحميل…</h1>
+<p id="s">اختبار 1: JavaScript</p>
+<script>
+document.getElementById('r').textContent='✅ JavaScript يعمل';
+document.getElementById('s').textContent='اختبار 2: بدأ التنفيذ في '+new Date().toLocaleTimeString();
+
+setTimeout(()=>{
+  document.getElementById('s').textContent='اختبار 3: جاري الاتصال بـ Supabase…';
+  fetch('https://bwgetktksxbhrvobjvdb.supabase.co/auth/v1/health',{headers:{apikey:'sb_publishable_ZQbDTvvCDvc-Eny1Gj1n_w_A9EtdSQy'}})
+    .then(r=>r.text())
+    .then(t=>{
+      document.getElementById('s').textContent='✅ Supabase يستجيب: '+t.slice(0,50);
+    })
+    .catch(e=>{
+      document.getElementById('s').textContent='❌ Supabase فشل: '+e.message;
+    });
+},1500);
+</script>
+</body>
+</html>
